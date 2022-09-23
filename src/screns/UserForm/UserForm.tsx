@@ -2,11 +2,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BackButton } from '../../components/BackButton/BackButton';
 import { InputTextForm } from '../../components/InputForm/InputTextForm';
 import { THEME } from '../../theme/theme';
 import { styles } from './styles';
-import logoImg from "./../../assets/logo.png";
+import logoImg from './../../assets/logo.png';
 import { createUser } from '../../store/firebase/firebase';
 
 
@@ -23,13 +22,10 @@ export function UserForm() {
     function create() {
         createUser(email, password);
     }
-    
+
     return (
         <SafeAreaView style={styles.safeArea}>
 
-            <View >
-                <BackButton onPress={goBack} />
-            </View>
             <View style={styles.container}>
                 <Image source={logoImg}
                     style={styles.logo}
@@ -57,20 +53,35 @@ export function UserForm() {
                     onChangeText={setPasswordConfirm}
                     autoCapitalize='none'
                 />
-
+                
                 <TouchableOpacity
-                    style={styles.submitButton}
-                onPress={() => {
-                    create()
-                }}
+                    style={[styles.button, styles.submitButton]}
+                    onPress={() => {
+                        create()
+                    }}
                 >
                     <Text
                         style={styles.submitButtonText}
                     >
-                        Criar
+                        Create
                     </Text>
 
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={[styles.button, styles.cancelButton]}
+                    onPress={() => {
+                        goBack()
+                    }}
+                >
+                    <Text
+                        style={styles.cancelButtonText}
+                    >
+                        Cancel
+                    </Text>
+
+                </TouchableOpacity>
+                
             </View>
         </SafeAreaView>
     );

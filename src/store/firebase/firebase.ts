@@ -1,33 +1,43 @@
-
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, getDoc, doc, } from 'firebase/firestore/lite';
-import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from "firebase/auth";
-import { firebaseCredential } from "../../env/env";
+import {initializeApp} from 'firebase/app';
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+} from 'firebase/firestore/lite';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
+import {firebaseCredential} from '../../env/env';
 
 const firebaseConfig = firebaseCredential;
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app)
+const db = getFirestore(app);
 // const analytics = getAnalytics(app);
 
 export async function getClientsAll() {
-
   const clientsCol = collection(db, 'Clients');
 
   const clientsSnapshot = await getDocs(clientsCol);
-  const clientList = clientsSnapshot.docs.map(doc => { return { id: doc.id, ...doc.data() } });
+  const clientList = clientsSnapshot.docs.map(docEl => {
+    return {id: docEl.id, ...docEl.data()};
+  });
   return clientList;
 }
 export async function getClient(id: string) {
-
   const docRef = doc(db, 'Clients', id);
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
+    console.log('Document data:', docSnap.data());
     return docSnap.data();
   } else {
-    console.log("No such document!");
+    console.log('No such document!');
   }
   return {};
 }
@@ -39,37 +49,40 @@ export async function authSignIn(email: string, password: string) {
     console.log(password);
 
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-
+      .then(userCredential => {
         const user = userCredential.user;
         console.log(userCredential);
         console.log(user);
-        resolve(true)
+        resolve(true);
       })
-      .catch((error) => {
+      .catch(error => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode);
         console.log(errorMessage);
 
-        resolve(false)
+        resolve(false);
       });
-  })
+  });
 }
 
 export function authSignOut() {
   const auth = getAuth();
-  signOut(auth).then(() => {
-    console.log('Sign-out successful');
-  }).catch((error) => {
-    console.log('An error happened.', error);
-  });
+  signOut(auth)
+    .then(() => {
+      console.log('Sign-out successful');
+    })
+    .catch(error => {
+      console.log('An error happened.', error);
+    });
 }
-export function createUser( email: string, password: string) {
+export function createUser(email: string, password: string) {
   const auth = getAuth();
-   createUserWithEmailAndPassword(auth, email, password).then(() => {
-    console.log('createUserWithEmailAndPassword successful');
-  }).catch((error) => {
-    console.log(' createUserWithEmailAndPassword An error happened.', error);
-  });
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      console.log('createUserWithEmailAndPassword successful');
+    })
+    .catch(error => {
+      console.log(' createUserWithEmailAndPassword An error happened.', error);
+    });
 }
