@@ -3,11 +3,11 @@ import { THEME } from "../../theme/theme";
 
 export const styles = StyleSheet.create({
     safeArea: {
-        backgroundColor: THEME.COLORS.BACKGROUND_WITHE,
+        backgroundColor: THEME.COLORS.BACKGROUND_WHITE,
     },
     container: {
         alignItems: "center",
-        backgroundColor: THEME.COLORS.BACKGROUND_WITHE,
+        backgroundColor: THEME.COLORS.BACKGROUND_WHITE,
         height: '100%',
         paddingBottom: 50
     },
@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
         backgroundColor: THEME.COLORS.PRIMARY
     },
     buttonCancel: {
-        backgroundColor: THEME.COLORS.BACKGROUND_WITHE,
+        backgroundColor: THEME.COLORS.BACKGROUND_WHITE,
         borderWidth: 1,
         borderColor: THEME.COLORS.PRIMARY
     },

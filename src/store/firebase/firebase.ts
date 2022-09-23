@@ -1,7 +1,7 @@
 
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, getDoc, doc, } from 'firebase/firestore/lite';
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from "firebase/auth";
 import { firebaseCredential } from "../../env/env";
 
 const firebaseConfig = firebaseCredential;
@@ -63,5 +63,13 @@ export function authSignOut() {
     console.log('Sign-out successful');
   }).catch((error) => {
     console.log('An error happened.', error);
+  });
+}
+export function createUser( email: string, password: string) {
+  const auth = getAuth();
+   createUserWithEmailAndPassword(auth, email, password).then(() => {
+    console.log('createUserWithEmailAndPassword successful');
+  }).catch((error) => {
+    console.log(' createUserWithEmailAndPassword An error happened.', error);
   });
 }

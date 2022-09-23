@@ -5,13 +5,13 @@ import { THEME } from "../../theme/theme";
 
 export const styles = StyleSheet.create({
     safeArea: {
-        backgroundColor: THEME.COLORS.BACKGROUND_WITHE
+        backgroundColor: THEME.COLORS.BACKGROUND_WHITE
     },
     container: {
         height: '100%',
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: THEME.COLORS.BACKGROUND_WITHE
+        backgroundColor: THEME.COLORS.BACKGROUND_WHITE
     },
     logo: {
         width: 270,

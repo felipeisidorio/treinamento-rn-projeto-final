@@ -5,7 +5,7 @@ import { THEME } from "../../theme/theme";
 
 export const styles = StyleSheet.create({
     safeArea: {
-        backgroundColor: THEME.COLORS.BACKGROUND_WITHE,
+        backgroundColor: THEME.COLORS.BACKGROUND_WHITE,
         height: '100%'
     },
     container: {
