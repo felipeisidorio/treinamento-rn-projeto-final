@@ -4,7 +4,7 @@ import { Image, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { THEME } from '../../theme/theme';
 import { AuthContext } from "../../contexts/auth";
-import logoImg from "./../../assets/onestudio.png";
+import logoImg from "./../../assets/logo.png";
 import { styles } from './styles';
 import { InputTextForm } from '../../components/InputForm/InputTextForm';
 import { createDataBase } from '../../store/sqlite/db';
