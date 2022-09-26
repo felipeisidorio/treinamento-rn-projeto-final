@@ -1,7 +1,7 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {ClientList} from '../screns/ClientList/ClientList';
+import {Conversion} from '../screns/Conversion/Conversion';
 import {LogOff} from '../screns/LogOff';
-import {Sync} from '../screns/Sync';
 
 const {Navigator, Screen} = createDrawerNavigator();
 
@@ -17,9 +17,9 @@ export function MenuRoutes() {
       />
       <Screen
         name="sync"
-        component={Sync}
+        component={Conversion}
         options={{
-          title: 'Sync',
+          title: 'Conversion',
         }}
       />
       <Screen
