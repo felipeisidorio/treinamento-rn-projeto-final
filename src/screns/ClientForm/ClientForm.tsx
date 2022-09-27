@@ -311,6 +311,15 @@ export function ClientForm() {
             <Text style={styles.text}>Delivery WeekDays</Text>
 
             <DropDownPicker
+              searchContainerStyle={{
+                borderBottomColor: THEME.COLORS.CAPTION_300,
+              }}
+              style={{
+                borderColor: THEME.COLORS.CAPTION_300,
+              }}
+              placeholderStyle={{
+                color: THEME.COLORS.CAPTION_500,
+              }}
               multiple={true}
               min={0}
               max={7}
@@ -340,7 +349,10 @@ export function ClientForm() {
                   onPress={() => setOpenDeliveryStartTime(true)}>
                   <Text>
                     {value.toTimeString().substring(0, 5)}{' '}
-                    <AntDesign name="clockcircleo" />
+                    <AntDesign
+                      name="clockcircleo"
+                      color={THEME.COLORS.CAPTION_500}
+                    />
                   </Text>
                 </TouchableOpacity>
 
@@ -375,7 +387,10 @@ export function ClientForm() {
                 <TouchableOpacity onPress={() => setOpenDeliveryEndTime(true)}>
                   <Text>
                     {value.toTimeString().substring(0, 5)}{' '}
-                    <AntDesign name="clockcircleo" />
+                    <AntDesign
+                      name="clockcircleo"
+                      color={THEME.COLORS.CAPTION_500}
+                    />
                   </Text>
                 </TouchableOpacity>
 
@@ -402,6 +417,15 @@ export function ClientForm() {
             <Text style={styles.text}>Contact Preference</Text>
 
             <DropDownPicker
+              searchContainerStyle={{
+                borderBottomColor: THEME.COLORS.CAPTION_300,
+              }}
+              style={{
+                borderColor: THEME.COLORS.CAPTION_300,
+              }}
+              placeholderStyle={{
+                color: THEME.COLORS.CAPTION_500,
+              }}
               open={openContactPreferenceList}
               setOpen={setOpenContactPreferenceList}
               value={contactPreferenceValue}
