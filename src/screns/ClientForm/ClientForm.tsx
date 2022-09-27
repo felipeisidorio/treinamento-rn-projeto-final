@@ -1,6 +1,13 @@
 import {useContext, useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
-import {ScrollView, Switch, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {BackButton} from '../../components/BackButton/BackButton';
 import {InputTextForm} from '../../components/InputForm/InputTextForm';
@@ -31,7 +38,7 @@ export function ClientForm() {
   const {clientSelected, enableClientStack} = useContext(AuthContext);
 
   const [operationInsert, setOperationInsert] = useState<boolean>(true);
-  const [cpPhoneInwhatsapp, setCpPhoneInwhatsapp] = useState<boolean>(false);
+  const [cpPhoneInWhatsapp, setCpPhoneInWhatsapp] = useState<boolean>(false);
 
   const [weekDaysValue, setweekDaysValue] = useState<string[]>([]);
   const [openWeekDaysList, setOpenWeekDaysList] = useState(false);
@@ -60,8 +67,9 @@ export function ClientForm() {
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    // formState: {errors},
     setValue,
+    getValues,
   } = useForm({
     defaultValues: {
       firstname: '',
@@ -101,35 +109,63 @@ export function ClientForm() {
     }
   }
 
-  function onSubmit(data: ClientForm) {
-    const clientAux: ClientDB = {
-      id: operationInsert ? `${new Date().getTime()}` : clientSelected.id,
-      firstname: data.firstname,
-      lastname: data.lastname,
-      phone: data.phone,
-      whatsapp: data.whatsapp,
-      email: data.email,
-      deliveryStartTime: `${data.deliveryStartTime}`,
-      deliveryEndTime: `${data.deliveryEndTime}`,
-      businessType: data.businessType,
-      traceableDelivery: `${data.traceableDelivery ? 1 : 0}`,
-      state: data.state,
-      contactPreference: contactPreferenceValue,
-      deliveryWeekDays: weekDaysValue.join(),
-    };
-    const objectArray = Object.entries(clientAux);
-    const result = [];
-    for (let i = 0; i < objectArray.length; i++) {
-      const el = objectArray[i];
-      const resp = {column: el[0], value: el[1]};
-      result.push(resp);
-    }
-    if (operationInsert) {
-      insert('Clients', result);
+  function setWhatsapp(valid: boolean = true) {
+    if (valid) {
+      const cliForm = getValues();
+      setValue('whatsapp', cliForm.phone);
+      console.log(cliForm);
+      setCpPhoneInWhatsapp(valid);
     } else {
-      update('Clients', result);
+      setValue('whatsapp', '');
+      setCpPhoneInWhatsapp(false);
     }
-    goBack();
+  }
+
+  function onSubmit(data: ClientForm) {
+    if (
+      data.firstname &&
+      data.lastname &&
+      data.phone &&
+      data.whatsapp &&
+      data.email &&
+      data.deliveryStartTime &&
+      data.deliveryEndTime &&
+      data.businessType &&
+      data.state &&
+      contactPreferenceValue &&
+      weekDaysValue.length > 0
+    ) {
+      const clientAux: ClientDB = {
+        id: operationInsert ? `${new Date().getTime()}` : clientSelected.id,
+        firstname: data.firstname,
+        lastname: data.lastname,
+        phone: data.phone,
+        whatsapp: data.whatsapp,
+        email: data.email,
+        deliveryStartTime: `${data.deliveryStartTime}`,
+        deliveryEndTime: `${data.deliveryEndTime}`,
+        businessType: data.businessType,
+        traceableDelivery: `${data.traceableDelivery ? 1 : 0}`,
+        state: data.state,
+        contactPreference: contactPreferenceValue,
+        deliveryWeekDays: weekDaysValue.join(),
+      };
+      const objectArray = Object.entries(clientAux);
+      const result = [];
+      for (let i = 0; i < objectArray.length; i++) {
+        const el = objectArray[i];
+        const resp = {column: el[0], value: el[1]};
+        result.push(resp);
+      }
+      if (operationInsert) {
+        insert('Clients', result);
+      } else {
+        update('Clients', result);
+      }
+      goBack();
+    } else {
+      showlAlert();
+    }
   }
 
   function goBack() {
@@ -140,6 +176,12 @@ export function ClientForm() {
     }
   }
 
+  function showlAlert() {
+    Alert.alert('Mandatory fields', 'Mandatory fields must be filled !!', [
+      {text: 'OK'},
+    ]);
+  }
+
   useEffect(() => {
     getClientDetails();
   }, []);
@@ -147,6 +189,9 @@ export function ClientForm() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <BackButton onPress={goBack} />
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}> New Client</Text>
+      </View>
       <ScrollView>
         <View style={styles.container}>
           <Controller
@@ -163,9 +208,6 @@ export function ClientForm() {
             )}
             name="firstname"
           />
-          {errors.firstname && (
-            <Text style={styles.textError}>This is required.</Text>
-          )}
 
           <Controller
             control={control}
@@ -182,9 +224,6 @@ export function ClientForm() {
             name="lastname"
           />
 
-          {errors.lastname && (
-            <Text style={styles.textError}>This is required.</Text>
-          )}
           <Controller
             control={control}
             rules={{required: false}}
@@ -199,37 +238,41 @@ export function ClientForm() {
             )}
             name="phone"
           />
-          {errors.phone && (
-            <Text style={styles.textError}>This is required.</Text>
-          )}
-          <View style={styles.content}>
-            <Text style={styles.text}>is This phone Whatsapp?</Text>
+          {operationInsert ? (
+            <View style={styles.content}>
+              <Text style={styles.text}>is This phone Whatsapp?</Text>
 
-            <View style={styles.row}>
-              <TouchableOpacity onPress={() => setCpPhoneInwhatsapp(true)}>
-                <Text>
-                  {cpPhoneInwhatsapp ? (
-                    <Fontisto name="radio-btn-active" />
-                  ) : (
-                    <Fontisto name="radio-btn-passive" />
-                  )}
-                  {'  Yes'}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.radioSecondButton}
-                onPress={() => setCpPhoneInwhatsapp(false)}>
-                <Text>
-                  {!cpPhoneInwhatsapp ? (
-                    <Fontisto name="radio-btn-active" />
-                  ) : (
-                    <Fontisto name="radio-btn-passive" />
-                  )}
-                  {'  No'}
-                </Text>
-              </TouchableOpacity>
+              <View style={styles.row}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setWhatsapp(true);
+                  }}>
+                  <Text>
+                    {cpPhoneInWhatsapp ? (
+                      <Fontisto name="radio-btn-active" />
+                    ) : (
+                      <Fontisto name="radio-btn-passive" />
+                    )}
+                    {'  Yes'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.radioSecondButton}
+                  onPress={() => setWhatsapp(false)}>
+                  <Text>
+                    {!cpPhoneInWhatsapp ? (
+                      <Fontisto name="radio-btn-active" />
+                    ) : (
+                      <Fontisto name="radio-btn-passive" />
+                    )}
+                    {'  No'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          ) : (
+            <></>
+          )}
 
           <Controller
             control={control}
@@ -243,13 +286,12 @@ export function ClientForm() {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
+                editable={!cpPhoneInWhatsapp}
               />
             )}
             name="whatsapp"
           />
-          {errors.whatsapp && (
-            <Text style={styles.textError}>This is required.</Text>
-          )}
+
           <Controller
             control={control}
             rules={{required: false}}
@@ -264,9 +306,6 @@ export function ClientForm() {
             )}
             name="email"
           />
-          {errors.email && (
-            <Text style={styles.textError}>This is required.</Text>
-          )}
 
           <View style={styles.content}>
             <Text style={styles.text}>Delivery WeekDays</Text>
@@ -287,10 +326,6 @@ export function ClientForm() {
               showArrowIcon={true}
             />
           </View>
-
-          {weekDaysValue.length > 0 && (
-            <Text style={styles.textError}>This is required.</Text>
-          )}
 
           <Controller
             control={control}
@@ -328,10 +363,6 @@ export function ClientForm() {
             name="deliveryStartTime"
           />
 
-          {errors.deliveryStartTime && (
-            <Text style={styles.textError}>This is required.</Text>
-          )}
-
           <Controller
             control={control}
             rules={{
@@ -366,9 +397,7 @@ export function ClientForm() {
             )}
             name="deliveryEndTime"
           />
-          {errors.deliveryEndTime && (
-            <Text style={styles.textError}>This is required.</Text>
-          )}
+
           <View style={styles.content}>
             <Text style={styles.text}>Contact Preference</Text>
 
@@ -385,9 +414,7 @@ export function ClientForm() {
               showArrowIcon={true}
             />
           </View>
-          {contactPreferenceValue && (
-            <Text style={styles.textError}>This is required.</Text>
-          )}
+
           <Controller
             control={control}
             rules={{
@@ -424,9 +451,7 @@ export function ClientForm() {
             )}
             name="businessType"
           />
-          {errors.businessType && (
-            <Text style={styles.textError}>This is required.</Text>
-          )}
+
           <Controller
             control={control}
             rules={{
@@ -444,9 +469,7 @@ export function ClientForm() {
             )}
             name="traceableDelivery"
           />
-          {errors.traceableDelivery && (
-            <Text style={styles.textError}>This is required.</Text>
-          )}
+
           <Controller
             control={control}
             rules={{

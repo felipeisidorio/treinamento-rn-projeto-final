@@ -12,6 +12,15 @@ export const styles = StyleSheet.create({
     paddingBottom: 50,
   },
   content: {width: '90%'},
+  titleContainer: {
+    alignItems: 'center',
+    width: '100%',
+  },
+  title: {
+    color: THEME.COLORS.PRIMARY,
+    fontSize: THEME.FONT_SIZE.MD,
+    fontWeight: 'bold',
+  },
   text: {
     width: '100%',
     marginTop: 10,
